@@ -3,6 +3,8 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
+const { v4: uuidv4 } = require('uuid');
+
 // look up an npm package to make an id for me
 const PORT = process.env.PORT || 3001;
 
@@ -22,58 +24,42 @@ app.get('/api/notes', (req, res) => {
   })
 });
 
-// POST request to add a review
-app.post('/api/reviews', (req, res) => {
-  // Log that a POST request was received
-  console.info(`${req.method} request received to add a review`);
-
-  // Destructuring assignment for the items in req.body
-  const { product, review, username } = req.body;
-
-  // If all the required properties are present
-  if (product && review && username) {
-    // Variable for the object we will save
-    const newReview = {
-      product,
-      review,
-      username,
-      review_id: uuid(),
-    };
-
-    // Obtain existing reviews
-    fs.readFile('./db/reviews.json', 'utf8', (err, data) => {
-      if (err) {
-        console.error(err);
-      } else {
-        // Convert string into JSON object
-        const parsedReviews = JSON.parse(data);
-
-        // Add a new review
-        parsedReviews.push(newReview);
-
-        // Write updated reviews back to the file
-        fs.writeFile(
-          './db/reviews.json',
-          JSON.stringify(parsedReviews, null, 4),
-          (writeErr) =>
-            writeErr
-              ? console.error(writeErr)
-              : console.info('Successfully updated reviews!')
-        );
-      }
-    });
-
-    const response = {
-      status: 'success',
-      body: newReview,
-    };
-
-    console.log(response);
-    res.status(201).json(response);
-  } else {
-    res.status(500).json('Error in posting review');
+app.post('/api/notes', (req, res) => {
+  // uuidv4();
+  console.log(req.body);
+  const notes = {
+    ...req.body, 
+    id: uuidv4(),
   }
+  console.log(notes);
+  fs.readFile("./db/db.json", "utf8", (err, data) => {
+    if (err) throw err;
+    const newNotes = JSON.parse(data);
+    newNotes.push(notes);
+    fs.writeFile("./db/db.json", JSON.stringify(newNotes), (err) => {
+      if (err) throw err;
+      res.json(newNotes);
+    })
+  })
 });
+
+app.delete('/api/notes/:id', (req, res) => {
+  console.log(req.params.id);
+  fs.readFile(
+    "./db/db.json",
+    "utf8",
+    (err, data) => {
+      if (err) throw err;
+      let newNotes = JSON.parse(data);
+      newNotes = newNotes.filter((note) => note.id!== req.params.id);
+      fs.writeFile("./db/db.json", JSON.stringify(newNotes), (err) => {
+        if (err) throw err;
+        res.json(newNotes);
+      })
+    }
+  )
+})
+
 //this route is the homepage route
 app.get('/', (req, res) =>
   res.sendFile(path.join(__dirname, '/public/index.html'))
