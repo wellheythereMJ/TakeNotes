@@ -4,7 +4,7 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 // look up an npm package to make an id for me
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
 const app = express();
 
@@ -13,9 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static('public'));
 
-app.get('/', (req, res) =>
-  res.sendFile(path.join(__dirname, '/public/index.html'))
-);
+
 
 // GET request for reviews
 app.get('/api/reviews', (req, res) => {
@@ -78,6 +76,18 @@ app.post('/api/reviews', (req, res) => {
     res.status(500).json('Error in posting review');
   }
 });
+//this route is the homepage route
+app.get('/', (req, res) =>
+  res.sendFile(path.join(__dirname, '/public/index.html'))
+);
+//notes route
+app.get('/notes', (req, res) =>
+  res.sendFile(path.join(__dirname, '/public/notes.html'))
+);
+//wildcard route
+app.get('*', (req, res) =>
+  res.sendFile(path.join(__dirname, '/public/index.html'))
+);
 
 app.listen(PORT, () =>
   console.log(`App listening at http://localhost:${PORT}`)
