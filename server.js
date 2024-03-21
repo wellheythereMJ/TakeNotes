@@ -14,14 +14,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
 
-
-// GET request for reviews
-app.get('/api/reviews', (req, res) => {
-  // Send a message to the client
-  res.status(200).json(`${req.method} request received to get reviews`);
-
-  // Log our request to the terminal
-  console.info(`${req.method} request received to get reviews`);
+app.get('/api/notes', (req, res) => {
+  fs.readFile("./db/db.json", "utf8", (err, data) => {
+    if (err) throw err;
+    console.log(JSON.parse(data));
+    res.json(JSON.parse(data));
+  })
 });
 
 // POST request to add a review
