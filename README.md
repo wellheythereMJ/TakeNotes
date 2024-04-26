@@ -3,4 +3,6 @@ This application allows users to write, save, and delete notes to organize their
 
 To get started, simply open the application and click the link to access the notes page. From there, you can add new notes by filling in the title and text fields, then clicking the "Save Note" button. Existing notes can be edited or deleted with ease, providing a user-friendly experience.
 
-This Note Taker application meets all technical requirements, including connecting the front end to the Express.js back end and ensuring error-free console operation. Explore the live application here and view the code repository on GitHub here.
+This Note Taker application meets all technical requirements, including connecting the front end to the Express.js back end and ensuring error-free console operation. Explore the live application [here]() and view the code repository on GitHub [here](https://github.com/wellheythereMJ/TakeNotes).
+
+![screenshot of TakeNotes Note Taker]()
